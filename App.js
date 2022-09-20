@@ -20,15 +20,15 @@ const App = () => {
     <View style={styles.container}>
 
       <View style = {styles.navbar}>
-        <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'stopwatch'? '#ff6F91': '#D15DB1'}]} onPress = {() => setWidget('stopwatch')}>
+        <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'stopwatch'? '#DAA135': '#B29B89'}]} onPress = {() => setWidget('stopwatch')}>
           <Image style={styles.icon} source={require('./assets/stopwatch.png')}/>
         </TouchableOpacity>
 
-        <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'timer'? '#ff6F91': '#D15DB1'}]} onPress = {() => setWidget('timer')}>
+        <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'timer'? '#DAA135': '#B29B89'}]} onPress = {() => setWidget('timer')}>
           <Image style={styles.icon} source={require('./assets/timer.png')}/>
         </TouchableOpacity>
 
-        <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'alarm'? '#ff6F91': '#D15DB1'}]} onPress = {() => setWidget('alarm')}>
+        <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'alarm'? '#DAA135': '#B29B89'}]} onPress = {() => setWidget('alarm')}>
           <Image style={styles.icon} source={require('./assets/alarm.png')}/>
         </TouchableOpacity>
       </View>
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
    flex: 1,
    width: '100%',
    height: '100%',
-   backgroundColor: '#9883CB',
+   backgroundColor: '#116C6E',
    alignItems: 'center',
    justifyContent: 'center',
   },
