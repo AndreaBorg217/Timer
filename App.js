@@ -8,7 +8,10 @@
  */
 
 import React, {useState} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Image} from 'react-native';
+import Stopwatch from './widgets/stopwatch'
+import Timer from './widgets/timer'
+import Alarm from './widgets/alarm'
 
 const App = () => {
   const [widget, setWidget] = useState('stopwatch');
@@ -16,20 +19,32 @@ const App = () => {
   return (
     <View style={styles.container}>
 
-    <View style = {styles.navbar}>
-      <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'stopwatch'? '#ff6F91': '#D15DB1'}]} onPress = {() => setWidget('stopwatch')}>
-        <Image style={styles.icon} source={require('./assets/stopwatch.png')}/>
-      </TouchableOpacity>
+      <View style = {styles.navbar}>
+        <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'stopwatch'? '#ff6F91': '#D15DB1'}]} onPress = {() => setWidget('stopwatch')}>
+          <Image style={styles.icon} source={require('./assets/stopwatch.png')}/>
+        </TouchableOpacity>
 
-      <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'timer'? '#ff6F91': '#D15DB1'}]} onPress = {() => setWidget('timer')}>
-        <Image style={styles.icon} source={require('./assets/timer.png')}/>
-      </TouchableOpacity>
+        <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'timer'? '#ff6F91': '#D15DB1'}]} onPress = {() => setWidget('timer')}>
+          <Image style={styles.icon} source={require('./assets/timer.png')}/>
+        </TouchableOpacity>
 
-      <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'alarm'? '#ff6F91': '#D15DB1'}]} onPress = {() => setWidget('alarm')}>
-        <Image style={styles.icon} source={require('./assets/alarm.png')}/>
-      </TouchableOpacity>
-    </View>
-    
+        <TouchableOpacity style = {[styles.navbutton, {backgroundColor: widget == 'alarm'? '#ff6F91': '#D15DB1'}]} onPress = {() => setWidget('alarm')}>
+          <Image style={styles.icon} source={require('./assets/alarm.png')}/>
+        </TouchableOpacity>
+      </View>
+
+      {widget == 'stopwatch'?(
+        <Stopwatch/>
+      ): null}
+
+      {widget == 'timer'?(
+        <Timer/>
+      ): null}
+
+      {widget == 'alarm'?(
+        <Alarm/>
+      ): null}
+      
     </View>
   );
 };
@@ -59,6 +74,10 @@ const styles = StyleSheet.create({
   icon:{
     width: 32, 
     height: 32
+  },
+  widget:{
+    backgroundColor: 'red',
+    position: 'absolute',
   }
 });
 
