@@ -24,6 +24,7 @@
  const Timer = () => {
 
  const [playing, setPlaying] = useState(false)
+ const [paused, setPaused] = useState(false)
  const [minutes, setMinutes] = useState(1)
  const [seconds, setSeconds] = useState(10)
 
@@ -32,16 +33,20 @@
         <Text style = {styles.timer}>{formatTime(minutes, seconds)}</Text>
 
      <View style = {styles.buttonContainer}>
-          {!playing?(
+          {!playing && !paused?(
             <TouchableOpacity style = {styles.button} onPress = {() => setPlaying(true)}>
               <Image style={styles.icon} source={require('../assets/play.png')}/>
             </TouchableOpacity>        
           ): 
           <View style = {styles.twoButtons}>
-            <TouchableOpacity style = {[styles.button, {marginRight: 150}]} onPress = {() => {setPlaying(false);}}>
+          {!playing && paused?(
+            <TouchableOpacity style = {[styles.button, {marginRight: 150}]} onPress = {() => {setPlaying(true); setPaused(false)}}>
+              <Image style={styles.icon} source={require('../assets/play.png')}/>
+            </TouchableOpacity>        
+          ): <TouchableOpacity style = {[styles.button, {marginRight: 150}]} onPress = {() => {setPlaying(false); setPaused(true)}}>
               <Image style={styles.icon} source={require('../assets/pause.png')}/>
             </TouchableOpacity>
-
+          }
             <TouchableOpacity  style = {[styles.button, {transform: [{translateX: 10}]}]} onPress = {() => {setPlaying(false); setMinutes(0); setSeconds(0)}}>
               <Image style={styles.icon} source={require('../assets/stop.png')}/>
             </TouchableOpacity>
