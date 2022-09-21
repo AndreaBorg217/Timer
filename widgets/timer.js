@@ -7,29 +7,43 @@
  * @flow strict-local
  */
 
- import React, {useState} from 'react';
+ import React, {useState, useEffect} from 'react';
  import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
- 
+
+
+ const formatTime = (minutes, seconds) =>{
+  if(minutes < 10 && minutes >= 0){
+    minutes = '0' + minutes;
+  }
+  if(seconds < 10){
+    seconds = '0' + seconds;
+  }
+  return minutes + ':' + seconds
+ }
+
  const Timer = () => {
- const [timer, setTimer] = useState('00:00:00')
+
  const [playing, setPlaying] = useState(false)
+ const [minutes, setMinutes] = useState(1)
+ const [seconds, setSeconds] = useState(10)
+
    return (
      <View style={styles.container}>
-        <Text style = {styles.text}>{timer}</Text>
+        <Text style = {styles.timer}>{formatTime(minutes, seconds)}</Text>
 
      <View style = {styles.buttonContainer}>
           {!playing?(
-            <TouchableOpacity style = {styles.button} onPress = {() => {setPlaying(true)}}>
+            <TouchableOpacity style = {styles.button} onPress = {() => setPlaying(true)}>
               <Image style={styles.icon} source={require('../assets/play.png')}/>
-            </TouchableOpacity>
+            </TouchableOpacity>        
           ): 
           <View style = {styles.twoButtons}>
-            <TouchableOpacity style = {[styles.button, {marginRight: 150}]} onPress = {() => {setPlaying(false)}}>
-              <Image style={styles.icon} source={require('../assets/stop.png')}/>
+            <TouchableOpacity style = {[styles.button, {marginRight: 150}]} onPress = {() => {setPlaying(false);}}>
+              <Image style={styles.icon} source={require('../assets/pause.png')}/>
             </TouchableOpacity>
 
-            <TouchableOpacity  style = {[styles.button, {transform: [{translateX: 10}]}]} onPress = {() => {setPlaying(false)}}>
-              <Image style={styles.icon} source={require('../assets/pause.png')}/>
+            <TouchableOpacity  style = {[styles.button, {transform: [{translateX: 10}]}]} onPress = {() => {setPlaying(false); setMinutes(0); setSeconds(0)}}>
+              <Image style={styles.icon} source={require('../assets/stop.png')}/>
             </TouchableOpacity>
           </View>
         }
@@ -40,13 +54,14 @@
  
  const styles = StyleSheet.create({
     container: {
-        width: 300,
-        height: 300,
-        alignItems: 'center',
+      width: 300,
+      height: 300,
+      alignItems: 'center',
     },
-    text:{
-        color: 'white',
-        fontSize: 70
+    timer:{
+      color: 'white',
+      fontSize: 70,
+      transform: [{translateY: 60}]
     },
     button:{
       width: 70,
