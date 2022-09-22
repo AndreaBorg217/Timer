@@ -9,6 +9,7 @@
 
  import React, {useState, useEffect} from 'react';
  import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+ import ScrollPicker from 'react-native-wheel-scrollview-picker';
 
 
  const formatTime = (minutes, seconds) =>{
@@ -25,8 +26,8 @@
 
  const [playing, setPlaying] = useState(false)
  const [paused, setPaused] = useState(false)
- const [minutes, setMinutes] = useState(1)
- const [seconds, setSeconds] = useState(10)
+ const [minutes, setMinutes] = useState(0)
+ const [seconds, setSeconds] = useState(0)
 
  useEffect(() => {
   if (!seconds && !minutes) {
@@ -49,15 +50,51 @@
 
    return (
      <View style={styles.container}>
-        <Text style = {styles.timer}>{formatTime(minutes, seconds)}</Text>
-
+     {!playing && !paused?(
+      <View style={styles.row}>
+        <ScrollPicker
+          dataSource={Array.from(Array(60).keys())}
+          selectedIndex={1}
+          wrapperColor='#116C6E'
+          renderItem={(data) => {
+            return( <View style={styles.pickerItem}><Text style={styles.pickerText}>{data}</Text></View> )
+          }}
+          onValueChange={(data) => {
+            setMinutes(data)
+          }}
+          wrapperHeight={180}
+          wrapperWidth={150}
+          itemHeight={80}
+          highlightColor = 'white'
+          highlightBorderWidth={4}
+        />
+      <Text style = {styles.colon}>:</Text>
+      <ScrollPicker
+          dataSource={Array.from(Array(60).keys())}
+          selectedIndex={1}
+          wrapperColor='#116C6E'
+          renderItem={(data) => {
+            return(<View style={styles.pickerItem}><Text style={styles.pickerText}>{data}</Text></View>)
+          }}
+          onValueChange={(data) => {
+            setSeconds(data)
+          }}
+          wrapperHeight={180}
+          wrapperWidth={150}
+          itemHeight={80}
+          highlightColor = 'white'
+          highlightBorderWidth={4}
+        />
+      </View>
+      ): <Text style = {styles.timer}>{formatTime(minutes, seconds)}</Text>
+     }
      <View style = {styles.buttonContainer}>
           {!playing && !paused?(
             <TouchableOpacity style = {styles.button} onPress = {() => setPlaying(true)}>
               <Image style={styles.icon} source={require('../assets/play.png')}/>
             </TouchableOpacity>        
           ): 
-          <View style = {styles.twoButtons}>
+          <View style = {styles.row}>
           {!playing && paused?(
             <TouchableOpacity style = {[styles.button, {marginRight: 150}]} onPress = {() => {setPlaying(true); setPaused(false)}}>
               <Image style={styles.icon} source={require('../assets/play.png')}/>
@@ -103,8 +140,24 @@
       position: 'absolute',
       transform: [{translateY: 350}]
     },
-    twoButtons:{
+    row:{
       flexDirection: 'row',
+    },
+    pickerItem:{
+      backgroundColor: '#116C6E',
+    },
+    pickerText:{
+      fontSize: 50,
+      color: 'white',
+    },
+    colon:{
+      padding: 40,
+      color: 'white',
+      fontSize: 70
+    },
+    label:{
+      color: 'white',
+      fontSize: 20,
     }
  });
  
