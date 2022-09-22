@@ -47,7 +47,7 @@
               <Image style={styles.icon} source={require('../assets/pause.png')}/>
             </TouchableOpacity>
           }
-            <TouchableOpacity  style = {[styles.button, {transform: [{translateX: 10}]}]} onPress = {() => {setPlaying(false); setMinutes(0); setSeconds(0)}}>
+            <TouchableOpacity  style = {[styles.button, {transform: [{translateX: 10}]}]} onPress = {() => {setPlaying(false); setPaused(false); setMinutes(0); setSeconds(0)}}>
               <Image style={styles.icon} source={require('../assets/stop.png')}/>
             </TouchableOpacity>
           </View>
