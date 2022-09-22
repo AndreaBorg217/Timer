@@ -10,6 +10,10 @@
  import React, {useState, useEffect} from 'react';
  import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
  import ScrollPicker from 'react-native-wheel-scrollview-picker';
+ import Sound from 'react-native-sound';  
+
+ Sound.setCategory('Playback');
+
 
  const formatTime = (minutes, seconds) =>{
   if(minutes < 10 && minutes >= 0){
@@ -21,8 +25,15 @@
   return minutes + ':' + seconds
  }
 
- const Timer = () => {
+ var alarm = new Sound('alarm.mp3', Sound.MAIN_BUNDLE, error => {
+  if (error) {
+    console.log('Failed to load alarm', error);
+    return;
+  }
+ });
 
+
+ const Timer = () => { 
  const [playing, setPlaying] = useState(false)
  const [paused, setPaused] = useState(false)
  const [minutes, setMinutes] = useState(1)
@@ -32,6 +43,8 @@
   if (!seconds && !minutes) {
     setPlaying(false); 
     setPaused(false);
+    alarm.play();
+    return;
   }
   else if(playing){
     const intervalId = setInterval(() => {
