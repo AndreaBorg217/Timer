@@ -28,6 +28,25 @@
  const [minutes, setMinutes] = useState(1)
  const [seconds, setSeconds] = useState(10)
 
+ useEffect(() => {
+  if (!seconds && !minutes) {
+    setPlaying(false); 
+    setPaused(false);
+  }
+  else if(playing){
+    const intervalId = setInterval(() => {
+      setSeconds(prev => prev - 1);
+      if(seconds == 0 && minutes != 0){
+        setMinutes(prev => prev - 1);
+        setSeconds(59)
+      }
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }
+}, [playing, seconds, minutes]);
+
+
+
    return (
      <View style={styles.container}>
         <Text style = {styles.timer}>{formatTime(minutes, seconds)}</Text>
