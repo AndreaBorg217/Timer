@@ -28,7 +28,6 @@
  const [minutes, setMinutes] = useState(1)
  const [seconds, setSeconds] = useState(1)
 
-
  useEffect(() => {
   if (!seconds && !minutes) {
     setPlaying(false); 
@@ -102,11 +101,7 @@
               <Image style={styles.icon} source={require('../assets/pause.png')}/>
             </TouchableOpacity>
           }
-
             <TouchableOpacity  style = {[styles.button, {transform: [{translateX: 10}]}]} onPress = {() => {setPlaying(false); setPaused(false); setMinutes(1); setSeconds(1)}}>
-
-            <TouchableOpacity  style = {[styles.button, {transform: [{translateX: 10}]}]} onPress = {() => {setPlaying(false); setPaused(false); setMinutes(0); setSeconds(0)}}>
-
               <Image style={styles.icon} source={require('../assets/stop.png')}/>
             </TouchableOpacity>
           </View>
@@ -126,40 +121,6 @@
       color: 'white',
       fontSize: 70,
       transform: [{translateY: 60}]
-
-    },
-    button:{
-      width: 70,
-      height: 70,
-      borderRadius: 70/2,
-      backgroundColor: '#00AAB2',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    icon:{
-      width: 32, 
-      height: 32
-    },
-    buttonContainer:{
-      position: 'absolute',
-      transform: [{translateY: 350}]
-    },
-    row:{
-      flexDirection: 'row',
-    },
-    pickerItem:{
-      backgroundColor: '#116C6E',
-    },
-    pickerText:{
-      fontSize: 50,
-      color: 'white',
-    },
-    colon:{
-      padding: 40,
-      color: 'white',
-      fontSize: 70
-    },
-
     },
     button:{
       width: 70,
