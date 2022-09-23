@@ -8,7 +8,7 @@
  */
 
  import React, {useState, useEffect} from 'react';
- import {StyleSheet, FlatList, View, TouchableOpacity, Image, Text, Switch} from 'react-native';
+ import {StyleSheet, FlatList, View, TouchableOpacity, Image, Text, Switch, Pressable} from 'react-native';
  import RNDateTimePicker from '@react-native-community/datetimepicker';
  import Sound from 'react-native-sound';  
 
@@ -23,6 +23,8 @@
 
  const Alarm = () => {
   const [pickerVisible, setPickerVisible] = useState(false); 
+  const [deleteVisible, setDeleteVisible] = useState(false); 
+  const [toDelete, setToDelete] = useState(); 
   const [alarms, setAlarms] = useState([]);
   
 
@@ -49,10 +51,17 @@
     setAlarms(prev => [...temp]);
   }
 
+  const deleteAlarm = () => {
+    let temp = [...alarms];
+    temp.splice(toDelete,1);
+    setAlarms(prev => [...temp]);
+    setToDelete(null)
+  }
+
 
   const Row = ({time, index}) =>{
     return(
-      <View style = {styles.row}>
+      <Pressable style = {styles.row} onLongPress={()=> {setToDelete(index); setDeleteVisible(true)}}>
         <Text style = {styles.time}>{time}</Text>
         <Switch
           trackColor={{ false: "white", true: "#38AE90" }}
@@ -60,7 +69,7 @@
           onValueChange={()=>setActive(index)}
           value={alarms[index].active}
         />
-      </View>
+      </Pressable>
     )
   }
 
@@ -96,7 +105,19 @@
 
       <TouchableOpacity style = {styles.button} onPress = {() => setPickerVisible(true)}>
         <Image style={styles.icon} source={require('../assets/plus.png')}/>
-      </TouchableOpacity>        
+      </TouchableOpacity> 
+
+      {deleteVisible?(
+        <View style = {styles.deleteModal}>
+          <TouchableOpacity style={styles.deleteButton} onPress={()=>{deleteAlarm(); setDeleteVisible(false)}}>
+            <Image style={styles.deleteIcon} source={require('../assets/delete.png')}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.deleteButton} onPress={()=>setDeleteVisible(false)}>
+            <Image style={styles.deleteIcon} source={require('../assets/close.png')}/>
+          </TouchableOpacity>
+        </View>
+        ): null}
+      
      </View>
    );
  };
@@ -127,14 +148,37 @@
     },
     row:{
       flexDirection: 'row',
-      margin: 10,
+      marginBottom: 20,
       transform: [{translateX: -10}],
     },
     time:{
       color: 'white',
       fontSize: 30,
       paddingRight: 175,
-
+    },
+    deleteModal:{
+      width: 388,
+      height: 200,
+      backgroundColor: '#116C6E',
+      position: 'absolute',
+      transform: [{translateY: 260}],
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingTop: 50
+    },
+    deleteIcon:{
+      width: 32,
+      height: 32,
+    },
+    deleteButton:{
+      margin: 60,
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: 70,
+      height: 70,
+      borderRadius: 70/2,
+      backgroundColor: '#00AAB2',
     }
  });
  
