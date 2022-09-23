@@ -7,14 +7,41 @@
  * @flow strict-local
  */
 
- import React, {useState} from 'react';
+ import React, {useState, useEffect} from 'react';
  import {StyleSheet, FlatList, View, TouchableOpacity, Image, Text, Switch} from 'react-native';
  import RNDateTimePicker from '@react-native-community/datetimepicker';
+ import Sound from 'react-native-sound';  
 
+ Sound.setCategory('Playback');
+
+ var alarm = new Sound('alarm.mp3', Sound.MAIN_BUNDLE, error => {
+  if (error) {
+    console.log('Failed to load alarm', error);
+    return;
+  }
+ });
 
  const Alarm = () => {
   const [pickerVisible, setPickerVisible] = useState(false); 
-  const [alarms, setAlarms] = useState([{time: '10:00', active:false}, {time: '15:00', active:false}])
+  const [alarms, setAlarms] = useState([{time: '12:30', active: false}, {time: '12:33', active: false}, {time: '12:40', active: false}]);
+  
+
+  useEffect(() => {
+    setInterval(() => {
+      let timestamp = new Date();
+      let hours = timestamp.getHours();
+      let minutes = timestamp.getMinutes();
+      if(minutes < 10) {
+        minutes = '0' + minutes
+      };
+
+      alarms.forEach(element => {
+        if(element.active && element.time == hours.toString() + ':' + minutes){
+          alarm.play();
+        }
+      });
+    }, 60000);
+  }, [alarms])
   
   const setActive = (index) => {
     let temp = [...alarms];
@@ -51,8 +78,8 @@
                   setPickerVisible(false)
                 }
                 else if(event.type == 'Add alarm'){
-                  if(alarms && !alarms.includes(time)){
-                    setAlarms(prev => prev.push(time))
+                  if(!alarms.includes(time)){
+                    setAlarms([...alarms,{time: time, active: false}])
                   }
                   setPickerVisible(false)
                 }
