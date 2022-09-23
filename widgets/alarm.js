@@ -38,7 +38,7 @@
       };
 
       alarms.forEach(element => {
-        if(element.active && element.time == hours.toString() + ':' + minutes){
+        if(element.active && element.time == ' ' + hours.toString() + ':' + minutes){
           alarm.play();
         }
       });
