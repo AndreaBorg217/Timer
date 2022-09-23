@@ -23,7 +23,7 @@
 
  const Alarm = () => {
   const [pickerVisible, setPickerVisible] = useState(false); 
-  const [alarms, setAlarms] = useState([{time: '12:30', active: false}, {time: '12:33', active: false}, {time: '12:40', active: false}]);
+  const [alarms, setAlarms] = useState([]);
   
 
   useEffect(() => {
@@ -74,15 +74,15 @@
               is24Hour={true}
               positiveButtonLabel="Add alarm"  
               onChange={(event, time)=>{
-                if(event.type == 'Cancel'){
-                  setPickerVisible(false)
-                }
-                else if(event.type == 'Add alarm'){
-                  if(!alarms.includes(time)){
-                    setAlarms([...alarms,{time: time, active: false}])
+                console.log();
+                if(event.type === 'set'){
+                  let alarm = time.toString().slice(15,21)
+                  if(!alarms.includes(alarm)){
+                    setAlarms([...alarms,{time: alarm, active: false}])
+                    setPickerVisible(false)
                   }
-                  setPickerVisible(false)
                 }
+                setPickerVisible(false)
               }}
             />
         ): null}
