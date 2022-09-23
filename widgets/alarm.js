@@ -8,14 +8,35 @@
  */
 
  import React, {useState} from 'react';
- import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
+ import {StyleSheet, FlatList, View, TouchableOpacity, Image, Text, Switch} from 'react-native';
  import RNDateTimePicker from '@react-native-community/datetimepicker';
 
 
  const Alarm = () => {
   const [pickerVisible, setPickerVisible] = useState(false); 
-  const [alarms, setAlarms] = useState([])
+  const [alarms, setAlarms] = useState([{time: '10:00', active:false}, {time: '15:00', active:false}])
   
+  const setActive = (index) => {
+    let temp = [...alarms];
+    temp[index].active = !temp[index].active;
+    setAlarms(prev => [...temp]);
+  }
+
+
+  const Row = ({time, index}) =>{
+    return(
+      <View style = {styles.row}>
+        <Text style = {styles.time}>{time}</Text>
+        <Switch
+          trackColor={{ false: "white", true: "#38AE90" }}
+          thumbColor={alarms[index].active ? "white" : '#38AE90'}
+          onValueChange={()=>setActive(index)}
+          value={alarms[index].active}
+        />
+      </View>
+    )
+  }
+
   return (
      <View style={styles.container}>
         {pickerVisible?(
@@ -39,6 +60,12 @@
             />
         ): null}
 
+        <FlatList
+          style = {styles.list}
+          data={alarms}
+          renderItem={({item, index}) => <Row time = {item.time} index = {index}/>}
+          keyExtractor={(item, index) => index}
+        />
 
       <TouchableOpacity style = {styles.button} onPress = {() => setPickerVisible(true)}>
         <Image style={styles.icon} source={require('../assets/plus.png')}/>
@@ -61,17 +88,26 @@
       backgroundColor: '#00AAB2',
       alignItems: 'center',
       justifyContent: 'center',
+      position: 'absolute',
       transform: [{translateY: 235}]
     },
     icon:{
       width: 32, 
       height: 32
     },
-    test:{
-      backgroundColor: 'red',
-      width: 300,
-      height: 300,
-      position: 'absolute'
+    list:{
+      transform: [{translateY: -50}],
+    },
+    row:{
+      flexDirection: 'row',
+      margin: 10,
+      transform: [{translateX: -10}],
+    },
+    time:{
+      color: 'white',
+      fontSize: 30,
+      paddingRight: 175,
+
     }
  });
  
