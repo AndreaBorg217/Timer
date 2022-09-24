@@ -10,6 +10,7 @@
  import React, {useState, useEffect} from 'react';
  import {StyleSheet, FlatList, View, TouchableOpacity, Image, Text, Switch, Pressable} from 'react-native';
  import RNDateTimePicker from '@react-native-community/datetimepicker';
+ import AsyncStorage from '@react-native-async-storage/async-storage';
  import Sound from 'react-native-sound';  
 
  Sound.setCategory('Playback');
@@ -44,6 +45,24 @@
       });
     }, 60000);
   }, [alarms])
+  
+  useEffect(() => {
+    const fetchAlarms = async () =>{
+      const saved = await AsyncStorage.getItem('ALARMS');
+      if(saved){
+        setAlarms(JSON.parse(saved));
+      }
+      else{
+        setAlarms([])
+      }  
+    }
+    fetchAlarms();
+  }, []);
+
+  useEffect(() => {
+    AsyncStorage.setItem('ALARMS', JSON.stringify(alarms));
+  }, [alarms]);
+
   
   const setActive = (index) => {
     let temp = [...alarms];
