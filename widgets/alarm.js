@@ -63,7 +63,7 @@
     AsyncStorage.setItem('ALARMS', JSON.stringify(alarms));
   }, [alarms]);
 
-  
+
   const setActive = (index) => {
     let temp = [...alarms];
     temp[index].active = !temp[index].active;
@@ -105,7 +105,9 @@
                 console.log();
                 if(event.type === 'set'){
                   let alarm = time.toString().slice(15,21)
-                  if(!alarms.includes(alarm)){
+                  let currentAlarms = []
+                  alarms.forEach(alarm => {currentAlarms.push(alarm.time)})
+                  if(!currentAlarms.includes(alarm)){
                     setAlarms([...alarms,{time: alarm, active: false}])
                     setPickerVisible(false)
                   }
