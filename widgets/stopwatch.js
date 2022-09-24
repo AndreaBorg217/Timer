@@ -7,7 +7,7 @@
  * @flow strict-local
  */
 
- import React, {useState} from 'react';
+ import React, {useState, useEffect} from 'react';
  import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
  
  const formatTime = (minutes, seconds, milliseconds) =>{
@@ -18,9 +18,6 @@
     seconds = '0' + seconds;
   }
   if(milliseconds < 10){
-    milliseconds = '00' + milliseconds;
-  }
-  if(milliseconds < 100 && milliseconds > 10){
     milliseconds = '0' + milliseconds;
   }
   return minutes + ':' + seconds + ':' + milliseconds;
@@ -33,6 +30,35 @@
   const [ms, setMs] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [paused, setPaused] = useState(false)
+
+  useEffect(() => {
+    if (!seconds && !minutes && !setMs) {
+      setPlaying(false); 
+      setPaused(false);
+      return;
+    }
+    else if(playing){
+      const intervalId = setInterval(() => {
+        setMs(prev => prev + 1);
+        if(ms == 99){
+          setSeconds(prev => prev + 1);
+          setMs(0)
+        }
+        if(seconds == 59 && minutes!= 59){
+          setMinutes(prev => prev + 1);
+          setSeconds(0)
+        }
+        if(minutes == 59 && seconds == 59 && ms == 99){
+          setSeconds(0);
+          setMinutes(0);
+          setMs(0);
+          setPlaying(false); 
+      setPaused(false);
+        }
+      }, 1);
+      return () => clearInterval(intervalId);
+    }
+  }, [playing, seconds, minutes, ms]);
 
    return (
      <View style={styles.container}>
@@ -47,7 +73,7 @@
           <View style = {styles.row}>
           {playing && !paused?(
             <View style={styles.row}>
-              <TouchableOpacity style = {[styles.button, {marginRight: 160}]} onPress = {()=>{}}>
+              <TouchableOpacity style = {[styles.button, {marginRight: 170}]} onPress = {()=>{}}>
                 <Image style={styles.icon} source={require('../assets/lap.png')}/>
               </TouchableOpacity>
               <TouchableOpacity style = {styles.button} onPress = {() => {setPlaying(false); setPaused(true)}}>
@@ -58,7 +84,7 @@
             <View style = {styles.row}>
             {!playing && paused?(
             <View style={styles.row}>
-              <TouchableOpacity style = {[styles.button, {marginRight: 160}]} onPress = {() => {setPlaying(true); setPaused(false)}}>
+              <TouchableOpacity style = {[styles.button, {marginRight: 170}]} onPress = {() => {setPlaying(true); setPaused(false)}}>
                 <Image style={styles.icon} source={require('../assets/play.png')}/>
               </TouchableOpacity>   
               <TouchableOpacity style = {styles.button} onPress = {()=>{setPlaying(false); setPaused(false); setMinutes(0); setSeconds(0); setMs(0)}}>
