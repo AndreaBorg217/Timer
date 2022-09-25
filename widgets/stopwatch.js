@@ -62,18 +62,18 @@
     }
   }, [playing, seconds, minutes, cs]);
 
-  const mscToC = (str) => str.split(':').map(Number).reduce((a, b, i) => a * (i < 2 ? 60 : 100) + b);
+  const mscToCenti = (msc) => msc.split(':').map(Number).reduce((a, b, i) => a * (i < 2 ? 60 : 100) + b);
   
-  const cToMsc = (n) => {
-    const f2 = n => n.toString().padStart(2, 0);
-    const c = n % 100;
-    n = (n - c) / 100;
-    const s = n % 60;
-    let m = (n - s) / 60;
-    if(m < 10 && m >= 0){
-      m = '0' + minutes;
+  const centiToMsc = (centi) => {
+    const f2 = centi => centi.toString().padStart(2, 0);
+    const centiseconds = centi % 100;
+    centi = (centi - centiseconds) / 100;
+    const seconds = centi % 60;
+    let minutes = (centi - seconds) / 60;
+    if(minutes < 10 && minutes >= 0){
+      minutes = '0' + minutes;
     }
-    return `${m}:${f2(s)}:${f2(c)}`;
+    return `${minutes}:${f2(seconds)}:${f2(centiseconds)}`;
   }
   
   const addLaps = () => {
@@ -84,7 +84,7 @@
     }
     else{
       let temp = [...laps]
-      temp.push({lapTime: cToMsc(mscToC(formatTime(minutes, seconds, cs)) - mscToC(temp[laps.length-1].totalTime)), totalTime: formatTime(minutes, seconds, cs)})
+      temp.push({lapTime: centiToMsc(mscToCenti(formatTime(minutes, seconds, cs)) - mscToCenti(temp[laps.length-1].totalTime)), totalTime: formatTime(minutes, seconds, cs)})
       setLaps([...temp])   
     }
   }
