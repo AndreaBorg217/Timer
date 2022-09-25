@@ -10,56 +10,84 @@
  import React, {useState, useEffect} from 'react';
  import {StyleSheet, Text, View, TouchableOpacity, Image, FlatList} from 'react-native';
  
- const formatTime = (minutes, seconds, milliseconds) =>{
+ const formatTime = (minutes, seconds, centiseconds) =>{
   if(minutes < 10 && minutes >= 0){
     minutes = '0' + minutes;
   }
   if(seconds < 10){
     seconds = '0' + seconds;
   }
-  if(milliseconds < 10){
-    milliseconds = '0' + milliseconds;
+  if(centiseconds < 10){
+    centiseconds = '0' + centiseconds;
   }
-  return minutes + ':' + seconds + ':' + milliseconds;
+  return minutes + ':' + seconds + ':' + centiseconds;
  }
 
 
  const Stopwatch = () => {
   const [minutes, setMinutes] = useState(0)
   const [seconds, setSeconds] = useState(0)
-  const [ms, setMs] = useState(0)
+  const [cs, setCs] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [paused, setPaused] = useState(false)
   const [laps, setLaps] = useState([])
   
   useEffect(() => {
-    if (!seconds && !minutes && !setMs) {
+    if (!seconds && !minutes && !setCs) {
       setPlaying(false); 
       setPaused(false);
       return;
     }
     else if(playing){
       const intervalId = setInterval(() => {
-        setMs(prev => prev + 1);
-        if(ms == 99){
+        setCs(prev => prev + 1);
+        if(cs == 99){
           setSeconds(prev => prev + 1);
-          setMs(0)
+          setCs(0)
         }
         if(seconds == 59 && minutes!= 59){
           setMinutes(prev => prev + 1);
           setSeconds(0)
         }
-        if(minutes == 59 && seconds == 59 && ms == 99){
+        if(minutes == 59 && seconds == 59 && cs == 99){
           setSeconds(0);
           setMinutes(0);
-          setMs(0);
+          setCs(0);
           setPlaying(false); 
-      setPaused(false);
+          setPaused(false);
+          setLaps([])
         }
-      }, 1);
+      }, 0.1);
       return () => clearInterval(intervalId);
     }
-  }, [playing, seconds, minutes, ms]);
+  }, [playing, seconds, minutes, cs]);
+
+  const mscToC = (str) => str.split(':').map(Number).reduce((a, b, i) => a * (i < 2 ? 60 : 100) + b);
+  
+  const cToMsc = (n) => {
+    const f2 = n => n.toString().padStart(2, 0);
+    const c = n % 100;
+    n = (n - c) / 100;
+    const s = n % 60;
+    let m = (n - s) / 60;
+    if(m < 10 && m >= 0){
+      m = '0' + minutes;
+    }
+    return `${m}:${f2(s)}:${f2(c)}`;
+  }
+  
+  const addLaps = () => {
+    if(!laps[0]){
+      let temp = [...laps]
+      temp.push({lapTime: formatTime(minutes, seconds, cs), totalTime: formatTime(minutes, seconds, cs)}) 
+      setLaps([...temp])   
+    }
+    else{
+      let temp = [...laps]
+      temp.push({lapTime: cToMsc(mscToC(formatTime(minutes, seconds, cs)) - mscToC(temp[laps.length-1].totalTime)), totalTime: formatTime(minutes, seconds, cs)})
+      setLaps([...temp])   
+    }
+  }
 
   const Row = ({lapTime, totalTime, index}) =>{
     return(
@@ -76,7 +104,7 @@
    return (
      <View style={styles.container}>
 
-      <Text style = {[styles.stopwatch, {transform: [{translateY: laps[0]? -80: 0}]}]}>{formatTime(minutes, seconds, ms)}</Text>
+      <Text style = {[styles.stopwatch, {transform: [{translateY: laps[0]? -80: 50}]}]}>{formatTime(minutes, seconds, cs)}</Text>
 
         {laps[0]?(
           <View style = {styles.list}>
@@ -106,7 +134,7 @@
           <View style = {styles.row}>
           {playing && !paused?(
             <View style={styles.row}>
-              <TouchableOpacity style = {[styles.button, {marginRight: 170}]} onPress = {()=>{}}>
+              <TouchableOpacity style = {[styles.button, {marginRight: 170}]} onPress = {()=>{addLaps()}}>
                 <Image style={styles.icon} source={require('../assets/lap.png')}/>
               </TouchableOpacity>
               <TouchableOpacity style = {styles.button} onPress = {() => {setPlaying(false); setPaused(true)}}>
@@ -120,7 +148,7 @@
               <TouchableOpacity style = {[styles.button, {marginRight: 170}]} onPress = {() => {setPlaying(true); setPaused(false)}}>
                 <Image style={styles.icon} source={require('../assets/play.png')}/>
               </TouchableOpacity>   
-              <TouchableOpacity style = {styles.button} onPress = {()=>{setPlaying(false); setPaused(false); setMinutes(0); setSeconds(0); setMs(0)}}>
+              <TouchableOpacity style = {styles.button} onPress = {()=>{setPlaying(false); setPaused(false); setMinutes(0); setSeconds(0); setCs(0); setLaps([])}}>
                 <Image style={styles.icon} source={require('../assets/stop.png')}/>
               </TouchableOpacity>
             </View>  
@@ -142,7 +170,7 @@
     },
     stopwatch:{
       color: 'white',
-      fontSize: 70,
+      fontSize: 65,
     },
     button:{
       width: 70,
@@ -165,7 +193,7 @@
     header:{
       fontSize: 20,
       color: 'white',
-      paddingLeft: 88,
+      paddingLeft: 80,
     },
     headers:{
       transform: [{translateY: 10}],
@@ -190,11 +218,11 @@
       marginTop: 20
     },
     spacer:{
-      paddingRight: 100
+      paddingRight: 90
     },
     list:{
       transform: [{translateY: -40}],
-      marginBottom: 20
+      marginBottom: 20,
     }
  });
  
