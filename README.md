@@ -14,8 +14,8 @@
   <h3>A countdown timer which is set using a wheel scroller for the minutes & seconds respectively, displays the remaining time in the format minutes : seconds & plays a sound when the countdown has elapsed.<h3>
   <p align="center">
   <img src="Screenshots\Screenshot_1664269705.png" width="350" >
-  <img src="Screenshots\Screenshot_1664269735.png" width="350" >
-  <img src="Screenshots\Screenshot_1664269749.png" width="350" >
+  <img src="Screenshots\Screenshot_1664269739.png" width="350" >
+  <img src="Screenshots\Screenshot_1664269740.png" width="350" >
 </p>
   
 <h2>Alarm<h2>
